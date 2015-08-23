@@ -17,5 +17,8 @@ local function getStyle(name, field, state)
 end
 
 return {
-	getStyle = getStyle
+	getStyle = getStyle,
+	getTable = function(field) 
+		return theme[field] 
+	end
 }
