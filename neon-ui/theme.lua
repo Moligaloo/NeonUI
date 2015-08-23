@@ -1,8 +1,8 @@
 return {
 	Control = {
 		font = 'Lato-Regular.ttf:18',
-		borderWidth = 1,
 		fontColor = '#000000',
+		borderWidth = 1,
 		borderRadius = 2.5,
 		width = 0,
 		height = 0,
@@ -26,6 +26,7 @@ return {
 
 	Label = {
 		super = 'Control',
+		fontColor = 'white',
 	},
 
 	Icon = {

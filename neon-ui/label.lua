@@ -12,6 +12,8 @@ end
 
 function Label:draw()
 	engine.setFont(self.font)
+	engine.setColor(self:colorComponents(self.fontColor))
+
 	engine.printf(self.text, self.x, self.y, self.width, self.alignment)
 end
 
