@@ -1,6 +1,7 @@
 local class = require 'middleclass'
 local theme_manager = require 'neon-ui.theme-manager'
 local engine = require 'neon-ui.engine'
+local _ = require 'underscore'
 
 local Control = class 'Control'
 
@@ -23,7 +24,6 @@ function Control:initialize(t)
 	self:setStyleForState()
 
 	table.insert(controls, self)
-	self:set(t)
 end
 
 function Control:getStyle(field, state)
@@ -39,12 +39,8 @@ function Control:setDefaults(t)
 end
 
 function Control:set(t)
-	if t == nil then
-		return
-	end
-
-	for k, v in pairs(t) do
-		self[k] = v
+	if t then
+		_.extend(self, t)
 	end
 end
 
