@@ -10,7 +10,13 @@ local neon = {
 	end,
 }
 
-for _, class_name in ipairs {'Button', 'Label'} do
+local class_names = {
+	'Button',
+	'Label',
+	'Icon'
+}
+
+for _, class_name in ipairs(class_names) do
 	neon[class_name] = require('neon-ui.' .. class_name:lower())
 end
 
