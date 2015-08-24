@@ -45,7 +45,7 @@ function Control:move(dx, dy)
 end
 
 function Control:moveTo(x, y)
-	self.x, self.y = x, y
+	self:move(x - self.x, y - self.y)
 end
 
 function Control:sizeToFit()
