@@ -40,6 +40,14 @@ function Control:preferredSize()
 	end
 end
 
+function Control:move(dx, dy)
+	self.x, self.y = self.x + dx, self.y + dy
+end
+
+function Control:moveTo(x, y)
+	self.x, self.y = x, y
+end
+
 function Control:setDefaults(t)
 	for k,v in pairs(t) do
 		if self[k] == nil then
