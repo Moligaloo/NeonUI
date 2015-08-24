@@ -21,6 +21,8 @@ function Control:initialize(t)
 		font = engine.getFont(self:getStyle('font'))
 	}
 
+	self.subviews = {}
+
 	self:setStyleForState()
 
 	table.insert(controls, self)
@@ -42,6 +44,10 @@ end
 
 function Control:move(dx, dy)
 	self.x, self.y = self.x + dx, self.y + dy
+
+	for _, subview in ipairs(self.subviews) do
+		subview:move(dx, dy)
+	end
 end
 
 function Control:moveTo(x, y)
