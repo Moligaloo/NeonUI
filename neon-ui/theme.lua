@@ -29,7 +29,7 @@ return {
 	},
 
 	Icon = {
-		super = 'Control',
+		super = 'Label',
 
 		font = 'FontAwesome.otf:18'
 	},
