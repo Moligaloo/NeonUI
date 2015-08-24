@@ -17,4 +17,8 @@ function Label:draw()
 	engine.printf(self.text, self.x, self.y, self.width, self.alignment)
 end
 
+function Label:preferredSize()
+	return engine.getTextSize(self.text, self.font)
+end
+
 return Label
