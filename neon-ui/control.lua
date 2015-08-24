@@ -104,9 +104,11 @@ function Control:setStyleForState(state)
 	end
 end
 
-function Control:setFontAndColor()
-	engine.setFont(self.font)
-	engine.setColor(self:colorComponents(self.fontColor))
+function Control:setFontAndColor(font, fontColor)
+	font = font or self.font
+	fontColor = fontColor or self.fontColor
+	engine.setFont(font)
+	engine.setColor(self:colorComponents(fontColor))
 end
 
 function Control:draw()
