@@ -14,7 +14,8 @@ local neon = {
 local class_names = {
 	'Button',
 	'Label',
-	'Icon'
+	'Icon',
+	'Window'
 }
 
 for _, class_name in ipairs(class_names) do

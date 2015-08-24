@@ -34,6 +34,16 @@ return {
 		font = 'FontAwesome.otf:18'
 	},
 
+	Window = {
+		super = 'Control',
+
+		titleBarHeight = 30,
+		width = 500,
+		height = 500,
+		borderColor = 'blue',
+		backgroundColor = 'black',
+	},
+
 	-- modified from https://github.com/Semantic-Org/Semantic-UI/blob/master/src/themes/default/globals/site.variables
 	Colors = {
 		red = '#DB2828',
@@ -63,7 +73,7 @@ return {
 		lightGrey = '#DCDDDE',
 		lightBlack = '#545454',
 
-		fullBlack = '#000000',
+		black = '#000000',
 		offWhite = '#F9FAFB',
 		darkWhite = '#F3F4F5',
 		midWhite = '#DCDDDE',

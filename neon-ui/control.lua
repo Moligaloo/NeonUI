@@ -160,12 +160,15 @@ function Control:onMouseDown(x, y, button)
 	end
 end
 
-function Control:onmousereleased(x, y, button)
+function Control:onMouseUp(x, y, button)
 end
 
-function Control:onmousemoved(x, y, dx, dy)
-	self.state = self:contains(x, y) and 'hover' or nil
-	self:setStyleForState(self.state)
+function Control:onMouseMoved(x, y, dx, dy)
+	local new_state = self:contains(x, y) and 'hover' or nil
+	if self.state ~= new_state then
+		self.state = new_state
+		self:setStyleForState(self.state)
+	end
 end
 
 function Control:isFocused()
@@ -223,6 +226,15 @@ function Control.applyToAll(method_name, ...)
 	end
 end
 
+function Control.controlUnderMouse(x, y)
+	for i=#controls, 1, -1 do
+		local control = controls[i]
+		if control.enabled and control:contains(x, y) then
+			return control
+		end
+	end
+end
+
 Control.handlers = {
 	update = function(dt)
 		Control.applyToAll('update', dt)
@@ -237,28 +249,27 @@ Control.handlers = {
 	end,
 
 	mousepressed = function(x, y, button)
-		local found = nil
-		for _, control in ipairs(controls) do
-			if control.enabled and control:contains(x, y) then
-				control:setFocused()
-				control:onMouseDown(x, y, button)
-				found = control
-			end
-		end
-
-		if found == nil then
+		local control = Control.controlUnderMouse(x, y)
+		if control then
+			control:setFocused()
+			control:onMouseDown(x, y, button)
+		else
 			focusedControl = nil
 		end
 	end,
 
 	mousereleased = function(x, y, button)
-		Control.applyToAll('onmousereleased', x, y, button)
+		if focusedControl then
+			focusedControl:onMouseUp()
+		end
 	end,
 
 	mousemoved = function(x, y, dx, dy)
-		Control.applyToAll('onmousemoved', x, y, dx, dy)
+		for _, control in ipairs(controls) do
+			control:onMouseMoved(x, y, dx, dy)
+		end
 	end
 }	
 
--- 
+
 return Control

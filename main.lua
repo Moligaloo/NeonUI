@@ -5,6 +5,7 @@ local _ = require 'underscore'
 
 local title = neon.Label{
 	y = 10,
+	font = 'Lato-Regular.ttf:30',
 	width = neon.engine.getWindowWidth(),
 	text = 'No button clicked',
 	alignment = 'center'
