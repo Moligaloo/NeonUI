@@ -14,8 +14,7 @@ end
 function Button:draw()
 	Control.draw(self)
 
-	engine.setFont(self.font)
-	engine.setColor(self:colorComponents(self.fontColor))
+	self:setFontAndColor()
 
 	local textHeight = engine.getFontHeight(self.font)
 	engine.printf(self.text, self.x, self.y + (self.height-textHeight)/2, self.width, 'center')
