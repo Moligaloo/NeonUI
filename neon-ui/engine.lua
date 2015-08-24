@@ -20,12 +20,30 @@ local function getFont(font_desc)
 	return font
 end
 
+local function getFontObject(font)
+	return type(font) == 'string' and getFont(font) or font
+end
+
 local function getFontHeight(font)
+	font = getFontObject(font)
 	return fromPixels(font:getHeight())
 end
 
+local function getTextSize(text, font, width)
+	font = getFontObject(font)
+	local height
+	if width then
+		local _, lines = font:getWrap(text, toPixels(width))
+		height = lines * fromPixels(font:getLineHeight())
+	else
+		width = fromPixels(font:getWidth(text))
+		height = getFontHeight(font)
+	end
+	return width, height
+end
+
 local function setFont(font)
-	love.graphics.setFont(type(font) == 'string' and getFont(font) or font)
+	love.graphics.setFont(getFontObject(font))
 end
 
 local function roundrect(mode, x, y, width, height, xround, yround)
@@ -99,6 +117,7 @@ return {
 	getFont = getFont,
 	setFont = setFont,
 	getFontHeight = getFontHeight,
+	getTextSize = getTextSize,
 	setLineWidth = function(width)
 		love.graphics.setLineWidth(toPixels(width))
 	end,
