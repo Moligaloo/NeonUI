@@ -48,6 +48,13 @@ function Control:moveTo(x, y)
 	self:move(x - self.x, y - self.y)
 end
 
+function Control:moveToWindowCenter()
+	self:moveTo(
+		(engine.getWindowWidth() - self.width)/2,
+		(engine.getWindowHeight() - self.height)/2
+	)
+end
+
 function Control:sizeToFit()
 	self.width, self.height = self:preferredSize()
 end
