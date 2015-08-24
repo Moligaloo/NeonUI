@@ -5,6 +5,7 @@ local neon = {
 	Control = Control,
 
 	engine = engine,
+	layout = require 'neon-ui.layout',
 	overrideHandlers = function(event_names)
 		engine.overrideHandlers(Control.handlers, event_names)
 	end,

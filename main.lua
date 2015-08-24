@@ -1,6 +1,7 @@
 package.path = package.path .. ";./lib/?.lua"
 
 local neon = require 'neon-ui'
+local _ = require 'underscore'
 
 local title = neon.Label{
 	y = 10,
@@ -9,21 +10,29 @@ local title = neon.Label{
 	alignment = 'center'
 }
 
-for i, color_name in ipairs(neon.Control.availableColors()) do
-	local row = math.floor((i-1) / 5)
-	local column = (i-1) % 5
+local layout = neon.layout.grid {
+	controls = _.map(
+		neon.Control.availableColors(), 
+		function(color_name)
+			return neon.Button {
+				color = color_name,
+				text = color_name:gsub('^.', string.upper),
+				on_click = function(btn)
+					title.text = btn.text .. " button was clicked"
+				end
+			}
+		end),
+	column = 5,
+	gap = 10,
+	start_y = 100
+}
 
-	neon.Button{
-		color = color_name,
-		text = color_name:gsub('^.', string.upper),
-		x = 100 + column * 110,
-		y = 100 + row * (10 + 30),
-		width = 100,
-		on_click = function(btn)
-			title.text = btn.text .. " button was clicked"
-		end
-	} 
-end
+_.each(
+	layout.controls, 
+	function(control)
+		control:move((neon.engine.getWindowWidth()-layout.width)/2, 0)
+	end
+)
 
 neon.overrideHandlers()
 

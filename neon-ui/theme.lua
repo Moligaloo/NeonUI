@@ -15,7 +15,7 @@ return {
 		backgroundColor = '#000000',
 		fontColor = function(button) return button.color .. 'TextColor' end,
 		borderColor = '.color',
-		width = 300,
+		width = 100,
 		height = 30,
 
 		hover = {
