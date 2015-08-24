@@ -161,6 +161,16 @@ function Control:remove()
 	end
 end
 
+function Control:bringToFront()
+	self:remove()
+	table.insert(controls, self)
+end
+
+function Control:sendToBack()
+	self:remove()
+	table.insert(controls, 1, self)
+end
+
 -- static methods
 
 function Control.availableColors()
