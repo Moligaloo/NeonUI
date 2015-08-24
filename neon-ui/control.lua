@@ -152,6 +152,15 @@ function Control:setFocused()
 	focusedControl = self
 end
 
+function Control:remove()
+	for i=1, #controls do
+		if controls[i] == self then
+			table.remove(controls, i)
+			break
+		end
+	end
+end
+
 -- static methods
 
 function Control.availableColors()
