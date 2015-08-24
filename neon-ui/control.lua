@@ -97,10 +97,6 @@ function Control:setStyleForState(state)
 end
 
 function Control:draw()
-	if self.visible == false then
-		return
-	end
-
 	if self.backgroundColor then
 		engine.setColor(self:colorComponents(self.backgroundColor))
 		engine.rectangle('fill', self.x, self.y, self.width, self.height, self.borderRadius)
@@ -182,7 +178,11 @@ Control.handlers = {
 	end,
 
 	draw = function()
-		Control.applyToAll('draw')
+		for _, control in ipairs(controls) do
+			if control.visible then
+				control:draw()
+			end
+		end
 	end,
 
 	mousepressed = function(x, y, button)
