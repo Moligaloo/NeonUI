@@ -48,6 +48,10 @@ function Control:moveTo(x, y)
 	self.x, self.y = x, y
 end
 
+function Control:sizeToFit()
+	self.width, self.height = self:preferredSize()
+end
+
 function Control:setDefaults(t)
 	for k,v in pairs(t) do
 		if self[k] == nil then
