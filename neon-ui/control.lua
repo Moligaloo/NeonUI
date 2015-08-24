@@ -30,6 +30,16 @@ function Control:getStyle(field, state)
 	return theme_manager.getStyle(self.class.name, field, state)
 end
 
+function Control:preferredSize()
+	local width = self:getStyle('width')
+	local height = self:getStyle('height')
+	if width and height then
+		return width, height
+	else
+		return 0, 0
+	end
+end
+
 function Control:setDefaults(t)
 	for k,v in pairs(t) do
 		if self[k] == nil then
