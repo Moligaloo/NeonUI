@@ -124,7 +124,7 @@ function Control:setFontAndColor(font, fontColor)
 	engine.setColor(self:colorComponents(fontColor))
 end
 
-function Control:draw()
+function Control:drawBackground()
 	if self.backgroundColor then
 		engine.setColor(self:colorComponents(self.backgroundColor))
 		engine.rectangle('fill', self.x, self.y, self.width, self.height, self.borderRadius)
@@ -134,6 +134,19 @@ function Control:draw()
 		engine.setColor(self:colorComponents(self.borderColor))
 		engine.setLineWidth(self.borderWidth)
 		engine.rectangle('line', self.x, self.y, self.width, self.height, self.borderRadius)
+	end
+end
+
+function Control:draw()
+	self:drawBackground()
+end
+
+function Control:drawSubviews()
+	if next(self.subviews) then
+		engine.pushMatrix()
+		engine.translate(self.x, self.y)
+		_.invoke(self.subviews, 'draw')
+		engine.popMatrix()
 	end
 end
 
@@ -184,14 +197,15 @@ function Control:remove()
 	end
 end
 
-function Control:bringToFront()
-	self:remove()
-	table.insert(controls, self)
+function Control:addSubview(subview)
+	subview.superview = self
+	table.insert(self.subviews, subview)
 end
 
-function Control:sendToBack()
-	self:remove()
-	table.insert(controls, 1, self)
+function Control:addSubviews(subviews)
+	for _, subview in ipairs(subviews) do
+		table.insert(self.subviews, subview)
+	end
 end
 
 -- static methods
@@ -240,6 +254,7 @@ Control.handlers = {
 		for _, control in ipairs(controls) do
 			if control.visible then
 				control:draw()
+				control:drawSubviews()
 			end
 		end
 	end,
