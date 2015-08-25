@@ -17,7 +17,7 @@ function Window:initialize(t)
 end
 
 function Window:draw()
-	Control.draw(self)
+	self:drawBackground()
 
 	self:setFontAndColor()
 	local titleHeight = engine.getFontHeight(self.font)
