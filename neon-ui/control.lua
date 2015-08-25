@@ -44,14 +44,10 @@ end
 
 function Control:move(dx, dy)
 	self.x, self.y = self.x + dx, self.y + dy
-
-	for _, subview in ipairs(self.subviews) do
-		subview:move(dx, dy)
-	end
 end
 
 function Control:moveTo(x, y)
-	self:move(x - self.x, y - self.y)
+	self.x, self.y = x, y
 end
 
 function Control:moveToWindowCenter()
