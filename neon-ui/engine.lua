@@ -96,6 +96,13 @@ local function printf(text, x, y, width, alignment)
 	love.graphics.printf(text, x, y, width, alignment)
 end
 
+local pushMatrix = love.graphics.push
+local popMatrix = love.graphics.pop
+
+local function translate(dx, dy)
+	love.graphics.translate(toPixels(dx), toPixels(dy))
+end
+
 return {
 	overrideHandlers = function(handlers, event_names)
 		event_names = event_names or {'update', 'draw', 'mousepressed', 'mousereleased', 'mousemoved'}
@@ -124,6 +131,9 @@ return {
 	setColor = love.graphics.setColor,
 	rectangle = rectangle,
 	printf = printf,
+	pushMatrix = pushMatrix,
+	popMatrix = popMatrix,
+	translate = translate,
 
 	-- window utility
 	getWindowWidth = love.window.getWidth,
