@@ -4,7 +4,7 @@ local neon = require 'neon-ui'
 local _ = require 'underscore'
 
 local title = neon.Label{
-	y = 10,
+	y = 20,
 	font = 'Lato-Regular.ttf:30',
 	width = neon.engine.getWindowWidth(),
 	text = 'No button clicked',
@@ -25,7 +25,7 @@ local layout = neon.layout.grid {
 		end),
 	column = 5,
 	gap = 10,
-	start_y = 100
+	start_y = 80
 }
 
 _.each(
