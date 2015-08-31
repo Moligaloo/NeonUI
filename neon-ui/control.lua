@@ -50,6 +50,10 @@ function Control:moveTo(x, y)
 	self.x, self.y = x, y
 end
 
+function Control:position()
+	return self.x, self.y
+end
+
 function Control:moveToWindowCenter()
 	self:moveTo(
 		(engine.getWindowWidth() - self.width)/2,
@@ -166,6 +170,18 @@ function Control:onMouseDown(x, y, button)
 		if self.context_menu then
 			self.context_menu:showFrom(self)
 		end
+	end
+end
+
+function Control:size()
+	return self.width, self.height
+end
+
+function Control:resize(width, height)
+	self.width, self.height = width, height
+
+	if self.on_resize then
+		self.on_resize(self)
 	end
 end
 
