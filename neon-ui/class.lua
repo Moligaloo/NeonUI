@@ -7,16 +7,10 @@ local function index_from_class(class, object, key)
 	end
 
 	local property = class.properties[key]
-	if property and property.reader then
-		return property.reader(object, key)
+	local reader = property and property.reader
+	if reader then
+		return reader(object, key)
 	end
-end
-
-local create_class
-local function subclass(self, class_name) 
-	local class = create_class(nil, class_name)
-	class.superclass = self
-	return class
 end
 
 local function property(self, name, reader, writer)
@@ -77,17 +71,18 @@ local class_mt = {
 	end
 }
 
--- create new class
-function create_class(_, class_name)
+local function create_class(class_name, superclass)
 	return setmetatable({ 
-		superclass = false,
+		superclass = superclass or false,
 		name = class_name, 
 		methods = {}, 
 		static = {}, 
 		properties = {},
-		subclass = subclass,
+		subclass = function(self, class_name) 
+			return create_class(class_name, self)
+		end,
 		property = property
 	}, class_mt)
 end
 
-return setmetatable({},{ __call = create_class})
+return create_class
