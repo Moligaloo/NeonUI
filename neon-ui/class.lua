@@ -2,7 +2,6 @@
 
 local class_keyword = {}
 local class_keyword_mt = {}
-class_keyword_mt.__index = class_keyword_mt
 setmetatable(class_keyword, class_keyword_mt)
 
 local function index_from_class(class, object, key)
