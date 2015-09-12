@@ -1,9 +1,5 @@
 -- simple class system, support inheritance and properties
 
-local class_keyword = {}
-local class_keyword_mt = {}
-setmetatable(class_keyword, class_keyword_mt)
-
 local function index_from_class(class, object, key)
 	local method = class.methods[key]
 	if method then
@@ -17,9 +13,8 @@ local function index_from_class(class, object, key)
 end
 
 local create_class
-
 local function subclass(self, class_name) 
-	local class = create_class(class_name)
+	local class = create_class(nil, class_name)
 	class.superclass = self
 	return class
 end
@@ -41,57 +36,38 @@ local function property(self, name, reader, writer)
 	self.properties[name] = property
 end
 
-local function default_tostring(object)
-	return ("instance of %s"):format(object.class.name)
+local instance_mt = {}
+instance_mt.__index = function(self, key)
+	local class = self.class
+	while class do
+		local value = index_from_class(class, self, key)
+		if value then
+			return value
+		else
+			class = class.superclass
+		end
+	end
 end
 
--- create new class
-function create_class(class_name)
-	local class = { 
-		superclass = false,
-		name = class_name, 
-		methods = {}, 
-		static = {}, 
-		properties = {},
-		subclass = subclass,
-		property = property
-	}
-	local class_mt = {}
+instance_mt.__newindex = function(self, key, value)
+	local property = self.class.properties[key]
+	local writer = property and property.writer
+	if writer then writer(self, value) else rawset(self, key, value) end
+end
 
-	class_mt.__newindex = function(self, key, value)
+instance_mt.__tostring = function(self)
+	return object.tostring and object.tostring(object) or ("instance of %s"):format(object.class.name)
+end
+
+local class_mt = {
+	__newindex = function(self, key, value)
 		self.methods[key] = value
-	end
-
-	class_mt.__index = function(self, key)
+	end,
+	__index = function(self, key)
 		return self.static[key] or self.methods[key]
-	end
-
-	function class_mt.__call(_, ...)
+	end,
+	__call = function(class, ...) 
 		local instance = { class = class }
-		local instance_mt = {}
-		instance_mt.__index = function(self, key)
-			local class = self.class
-			while class do
-				local value = index_from_class(class, self, key)
-				if value then
-					return value
-				else
-					class = class.superclass
-				end
-			end
-		end
-
-		instance_mt.__newindex = function(self, key, value)
-			local property = self.class.properties[key]
-			if property and property.writer then
-				property.writer(self, value)
-			else
-				rawset(self, key, value)
-			end
-		end
-
-		instance_mt.__tostring = default_tostring
-
 		setmetatable(instance, instance_mt)
 
 		if instance.initialize then
@@ -100,12 +76,19 @@ function create_class(class_name)
 
 		return instance
 	end
+}
 
-	return setmetatable(class, class_mt)
+-- create new class
+function create_class(_, class_name)
+	return setmetatable({ 
+		superclass = false,
+		name = class_name, 
+		methods = {}, 
+		static = {}, 
+		properties = {},
+		subclass = subclass,
+		property = property
+	}, class_mt)
 end
 
-class_keyword_mt.__call = function(_, class_name)
-	return create_class(class_name)
-end
-
-return class_keyword
+return setmetatable({},{ __call = create_class})
