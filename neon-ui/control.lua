@@ -1,4 +1,4 @@
-local class = require 'middleclass'
+local class = require 'neon-ui.class'
 local theme_manager = require 'neon-ui.theme-manager'
 local engine = require 'neon-ui.engine'
 local _ = require 'neon-ui.underscorex'

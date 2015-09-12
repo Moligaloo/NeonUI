@@ -8,8 +8,7 @@ function Switch:initialize(t)
 		on = false
 	}
 
-	self.icon = Icon()
-	self.icon:setName('toggle-off')
+	self.icon = Icon {name = 'toggle-off'}
 	self:addSubview(self.icon)
 	self.icon:sizeToFit()
 	self:resize(self.icon:size())
@@ -18,13 +17,26 @@ function Switch:initialize(t)
 	end
 end
 
+Switch:property(
+	'on',
+	'_on',
+	function(self, value)
+		if self._on ~= value then
+			self._on = value
+
+			if self.icon then
+				self.icon.name = value and 'toggle-on' or 'toggle-off'
+			end
+
+			if self.value_changed then
+				self:value_changed()
+			end
+		end
+	end
+)
+
 function Switch:toggle()
 	self.on = not self.on
-	self.icon:setName(self.on and 'toggle-on' or 'toggle-off')
-
-	if self.value_changed then
-		self:value_changed()
-	end
 end
 
 return Switch
