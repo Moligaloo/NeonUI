@@ -36,28 +36,27 @@ local function property(self, name, reader, writer)
 	self.properties[name] = property
 end
 
-local instance_mt = {}
-instance_mt.__index = function(self, key)
-	local class = self.class
-	while class do
-		local value = index_from_class(class, self, key)
-		if value then
-			return value
-		else
-			class = class.superclass
+local instance_mt = {
+	__index = function(self, key)
+		local class = self.class
+		while class do
+			local value = index_from_class(class, self, key)
+			if value then
+				return value
+			else
+				class = class.superclass
+			end
 		end
+	end,
+	__newindex = function(self, key, value)
+		local property = self.class.properties[key]
+		local writer = property and property.writer
+		if writer then writer(self, value) else rawset(self, key, value) end
+	end,
+	__tostring = function(self)
+		return object.tostring and object.tostring(object) or ("instance of %s"):format(object.class.name)
 	end
-end
-
-instance_mt.__newindex = function(self, key, value)
-	local property = self.class.properties[key]
-	local writer = property and property.writer
-	if writer then writer(self, value) else rawset(self, key, value) end
-end
-
-instance_mt.__tostring = function(self)
-	return object.tostring and object.tostring(object) or ("instance of %s"):format(object.class.name)
-end
+}
 
 local class_mt = {
 	__newindex = function(self, key, value)
