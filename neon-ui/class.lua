@@ -58,18 +58,12 @@ function create_class(class_name)
 	}
 	local class_mt = {}
 
-	class_mt.__newindex = function(self, key, value)		
-		local methods = rawget(self, 'methods')
-		rawset(methods, key, value)
+	class_mt.__newindex = function(self, key, value)
+		self.methods[key] = value
 	end
 
 	class_mt.__index = function(self, key)
-		local static_method = self.static[key]
-		if static_method then
-			return static_method
-		end
-
-		return self.methods[key]
+		return self.static[key] or self.methods[key]
 	end
 
 	function class_mt.__call(_, ...)
