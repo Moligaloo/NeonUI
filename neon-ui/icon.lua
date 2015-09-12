@@ -8,11 +8,8 @@ function Icon:initialize(t)
 	Label.initialize(self, t)
 end
 
-function Icon:__newindex(key, value)
-	rawset(self, key, value)
-	if key == 'name' then
-		self.text = theme_manager.getStyle('Icons', value)
-	end
+function Icon:setName(name)
+	self.text = theme_manager.getStyle('Icons', name)
 end
 
 function Icon.availableIcons()

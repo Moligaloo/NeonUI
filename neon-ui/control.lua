@@ -1,7 +1,7 @@
 local class = require 'middleclass'
 local theme_manager = require 'neon-ui.theme-manager'
 local engine = require 'neon-ui.engine'
-local _ = require 'underscore'
+local _ = require 'neon-ui.underscorex'
 
 local Control = class 'Control'
 
@@ -52,6 +52,15 @@ end
 
 function Control:position()
 	return self.x, self.y
+end
+
+function Control:globalPosition()
+	if self.superview then
+		local super_x, super_y = self.superview:globalPosition()
+		return self.x + super_x, self.y + super_y
+	else
+		return self.x, self.y
+	end
 end
 
 function Control:moveToWindowCenter()
@@ -205,15 +214,20 @@ function Control:setFocused()
 end
 
 function Control:remove()
-	for i=1, #controls do
-		if controls[i] == self then
-			table.remove(controls, i)
-			break
-		end
+	if self.superview then
+		self.superview:removeSubview(self)
+	else
+		_.remove_one(controls, self)
 	end
 end
 
+function Control:removeSubview(subview)
+	subview.superview = nil
+	_.remove_one(self.subviews, subview)
+end
+
 function Control:addSubview(subview)
+	subview:remove()
 	subview.superview = self
 	table.insert(self.subviews, subview)
 end
@@ -226,7 +240,7 @@ end
 
 -- static methods
 
-function Control.availableColors()
+function Control.static.availableColors()
 	return {
 		'red',
 		'orange',
@@ -242,28 +256,22 @@ function Control.availableColors()
 	}
 end
 
-function Control.rootControls()
+function Control.static.rootControls()
 	return controls
 end
 
-function Control.applyToAll(method_name, ...)
-	for _, control in ipairs(controls) do
-		control[method_name](control, ...)
-	end
-end
-
-function Control.controlUnderMouse(x, y)
-	for i=#controls, 1, -1 do
-		local control = controls[i]
-		if control.enabled and control:contains(x, y) then
-			return control
+function Control.static.controlUnderMouse(x, y)
+	return _.reverse_detect(
+		controls, 
+		function(control) 
+			return control.enabled and control:contains(x, y) 
 		end
-	end
+	)
 end
 
 Control.handlers = {
 	update = function(dt)
-		Control.applyToAll('update', dt)
+		_.perform(controls, 'update', dt)
 	end,
 
 	draw = function()

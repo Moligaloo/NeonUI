@@ -44,6 +44,10 @@ return {
 		backgroundColor = 'black',
 	},
 
+	Switch = {
+		super = 'Control',
+	},
+
 	-- modified from https://github.com/Semantic-Org/Semantic-UI/blob/master/src/themes/default/globals/site.variables
 	Colors = {
 		red = '#DB2828',

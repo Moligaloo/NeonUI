@@ -11,6 +11,9 @@ local title = neon.Label{
 	alignment = 'center'
 }
 
+local switch = neon.Switch()
+switch:moveToWindowCenter()
+
 local layout = neon.layout.grid {
 	controls = _.map(
 		neon.Control.availableColors(), 
