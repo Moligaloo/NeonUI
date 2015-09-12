@@ -13,23 +13,6 @@ local function index_from_class(class, object, key)
 	end
 end
 
-local function property(self, name, reader, writer)
-	local property = {}
-	if type(reader) == 'string' then
-		property.reader = function(self) return self[reader] end
-	elseif type(reader) == 'function' then
-		property.reader = reader
-	end
-
-	if type(writer) == 'string' then
-		property.writer = function(self, value) rawset(self, writer, value) end
-	elseif type(writer) == 'function' then
-		property.writer = writer
-	end
-
-	self.properties[name] = property
-end
-
 local instance_mt = {
 	__index = function(self, key)
 		local class = self.class
@@ -60,13 +43,10 @@ local class_mt = {
 		return self.static[key] or self.methods[key]
 	end,
 	__call = function(class, ...) 
-		local instance = { class = class }
-		setmetatable(instance, instance_mt)
-
+		local instance = setmetatable({class = class}, instance_mt)
 		if instance.initialize then
 			instance:initialize(...)
 		end
-
 		return instance
 	end
 }
@@ -81,7 +61,12 @@ local function create_class(class_name, superclass)
 		subclass = function(self, class_name) 
 			return create_class(class_name, self)
 		end,
-		property = property
+		property = function(self, name, reader, writer)
+			self.properties[name] = {
+				reader = (type(reader) == 'function') and reader or function(self) return self[reader] end,
+				writer = (type(writer) == 'function') and writer or function(self, value) rawset(self, writer, value) end 
+			}
+		end
 	}, class_mt)
 end
 
