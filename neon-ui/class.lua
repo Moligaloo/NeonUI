@@ -48,7 +48,8 @@ local class_mt = {
 			instance:initialize(...)
 		end
 		return instance
-	end
+	end,
+	__tostring = function(self) return ("class of %s"):format(self.name) end
 }
 
 local function create_class(class_name, superclass)
@@ -62,10 +63,14 @@ local function create_class(class_name, superclass)
 			return create_class(class_name, self)
 		end,
 		property = function(self, name, reader, writer)
-			self.properties[name] = {
-				reader = (type(reader) == 'function') and reader or function(self) return self[reader] end,
-				writer = (type(writer) == 'function') and writer or function(self, value) rawset(self, writer, value) end 
-			}
+			local property = {}
+			if reader then
+				property.reader = (type(reader) == 'function') and reader or function(self) return self[reader] end
+			end
+			if writer then
+				property.writer = (type(writer) == 'function') and writer or function(self, value) rawset(self, writer, value) end 
+			end
+			self.properties[name] = property
 		end
 	}, class_mt)
 end
