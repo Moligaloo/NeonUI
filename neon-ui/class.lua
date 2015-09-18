@@ -31,7 +31,7 @@ local instance_mt = {
 		if writer then writer(self, value) else rawset(self, key, value) end
 	end,
 	__tostring = function(self)
-		return object.tostring and object.tostring(object) or ("instance of %s"):format(object.class.name)
+		return self.tostring and self.tostring(self) or ("instance of %s"):format(self.class.name)
 	end
 }
 
